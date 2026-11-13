@@ -121,9 +121,9 @@ def main():
                 if k == ' ':
                     paused = not paused
                 elif k in ('+', '='):
-                    speed = min(speed * 1.3, 8.0)
+                    speed = min(speed * 1.3, 10.0)
                 elif k in ('-', '_'):
-                    speed = max(speed / 1.3, 0.2)
+                    speed = max(speed / 1.3, 0.1)
                 elif k == 'f':
                     fireflies.append(Firefly(W, H))
                 elif k == 'q':
@@ -140,7 +140,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        sys.stdout.write(RESET + '\033[?25h\033[2J\033[H')
+        sys.stdout.write(RESET + '\033[?25h')
         sys.stdout.flush()
         restore_terminal()
 
