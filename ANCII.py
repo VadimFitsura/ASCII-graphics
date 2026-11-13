@@ -25,16 +25,8 @@ if os.name == 'nt':
                 return ''
         return None
 
-STYLES = [
-    '\033[1m',
-    '\033[2m',   
-    '\033[91m',  
-    '\033[92m',  
-    '\033[93m',  
-    '\033[94m',  
-    '\033[95m',  
-    '\033[96m',  
-]
+COLORS = [31, 32, 33, 34, 35, 36]
+BRIGHTNESS = [2, 22, 1]
 RESET = '\033[0m'
 
 DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1),
@@ -48,7 +40,8 @@ class Firefly:
         self.dx, self.dy = random.choice(DIRS)
         self.stop_timer = 0
         self.bright_timer = random.randint(5, 25)
-        self.bright_index = random.randrange(len(STYLES))
+        self.brightness = random.choice(BRIGHTNESS)
+        self.color = random.choice(COLORS)
 
     def update(self, W, H):
         if self.stop_timer > 0:
@@ -67,12 +60,10 @@ class Firefly:
                     self.y, self.dy = 0, -self.dy
                 elif self.y >= H:
                     self.y, self.dy = H - 1, -self.dy
-                if random.random() < 0.02:
-                    self.dx, self.dy = random.choice(DIRS)
         self.bright_timer -= 1
         if self.bright_timer <= 0:
-            self.bright_timer = random.randint(10, 30)
-            self.bright_index = random.randrange(len(STYLES))
+            self.bright_timer = random.randint(20, 30)
+            self.brightness = random.choice(BRIGHTNESS)
 
 
 def render(fireflies, W, H, paused, speed):
@@ -89,14 +80,18 @@ def render(fireflies, W, H, paused, speed):
             if c == ' ':
                 row.append(' ')
             else:
-                style = '\033[2m' if paused else STYLES[c.bright_index]
+                if paused:
+                    style = f"\033[2;{c.color}m"
+                else:
+                    style = f"\033[{c.brightness};{c.color}m"
                 row.append(style + '*' + RESET)
         row.append('\033[K\r\n')
         buf.append(''.join(row))
 
     status = (f"\033[1mFireflies: {len(fireflies)}  "
               f"Speed: {speed:.2f}x  "
-              f"{'PAUSED' if paused else 'running'}   \033[0m\033[K")
+              f"{'PAUSED' if paused else 'running'}   "
+                "добавление \"f\", скорость \"+/-\", пауза \"пробел\", выход \"q\"  \033[0m\033[K")
     buf.append(status)
 
     sys.stdout.write(''.join(buf))
