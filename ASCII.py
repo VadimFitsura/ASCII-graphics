@@ -3,20 +3,17 @@ import sys
 import time
 import random
 import shutil
+import msvcrt
 
 
-
-if os.name == 'nt':
-    os.system('')
-    import msvcrt
-    def get_key():
-        if msvcrt.kbhit():
-            ch = msvcrt.getch()
-            try:
-                return ch.decode('ascii')
-            except UnicodeDecodeError:
-                return ''
-        return None
+def get_key():
+    if msvcrt.kbhit():
+        ch = msvcrt.getch()
+        try:
+            return ch.decode('ascii')
+        except UnicodeDecodeError:
+            return ''
+    return None
 
 COLORS = [31, 32, 33, 34, 35, 36]
 BRIGHTNESS = [2, 22, 1]
@@ -95,6 +92,7 @@ def main():
     size = shutil.get_terminal_size(fallback=(80, 24))
     W = max(size.columns - 1, 10)
     H = max(size.lines - 2, 5)  
+    os.system('')
 
     fireflies = [Firefly(W, H) for _ in range(5)]
     paused = False
