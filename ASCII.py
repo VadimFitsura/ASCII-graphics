@@ -9,13 +9,6 @@ import shutil
 if os.name == 'nt':
     os.system('')
     import msvcrt
-
-    def setup_terminal():
-        pass
-
-    def restore_terminal():
-        pass
-
     def get_key():
         if msvcrt.kbhit():
             ch = msvcrt.getch()
@@ -109,7 +102,6 @@ def main():
     base_delay = 0.08
     running = True
 
-    setup_terminal()
     sys.stdout.write('\033[2J\033[?25l\033[H')
     sys.stdout.flush()
 
@@ -142,7 +134,6 @@ def main():
     finally:
         sys.stdout.write(RESET + '\033[?25h')
         sys.stdout.flush()
-        restore_terminal()
 
 
 if __name__ == '__main__':
